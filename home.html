@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>India Ticket Booking</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #fff;
+      color: #333;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: url('images/gateway.jpg') no-repeat center center/cover;
+      height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border-radius: 20px;
+      margin: 20px;
+    }
+
+    .hero-content {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 40px 30px;
+      border-radius: 15px;
+      color: #fff;
+      max-width: 700px;
+    }
+
+    .hero h1 {
+      font-size: 36px;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      margin-bottom: 25px;
+    }
+
+    .hero .btn {
+      background-color: white;
+      color: black;
+      padding: 12px 24px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    /* Discover Section */
+    .discover {
+      text-align: center;
+      padding: 50px 20px;
+    }
+
+    .discover h2 {
+      font-size: 32px;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .cards {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .card img {
+      width: 250px;
+      height: 180px;
+      border-radius: 10px;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card img:hover {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Experience India, One Ticket Away</h1>
+      <p>Book your tickets for more than 500+ Museums, Monuments & Archaeological Sites in India.</p>
+      <a href="#" class="btn">Buy your tickets</a>
+    </div>
+  </section>
+
+  <!-- Discover Section -->
+  <section class="discover">
+    <h2>Discover</h2>
+    <div class="cards">
+      <div class="card"><img src="images/tajmahal.jpg" alt="Taj Mahal"></div>
+      <div class="card"><img src="images/humayun.jpg" alt="Humayun's Tomb"></div>
+      <div class="card"><img src="images/gateway.jpg" alt="Gateway of India"></div>
+    </div>
+  </section>
+
+</body>
+</html>

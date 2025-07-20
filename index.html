@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Chatbot Ticket Booking</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: url('images/ticket.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+        #container {
+            max-width: 500px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 0 10px #333;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        #chat-box {
+            height: 450px;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .bot {
+            background-color: #f1f9f1;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            max-width: 75%;
+        }
+        .user {
+            background-color: #dce9f9;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            align-self: flex-end;
+            max-width: 75%;
+        }
+        #input-area {
+            display: flex;
+            padding: 10px;
+            background: #f5f5f5;
+            gap: 8px;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: cursive;
+        }
+        #send-btn, #reset-btn {
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        #send-btn:hover, #reset-btn:hover {
+            background-color: #0056b3;
+        }
+        #button-area {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            background: #f5f5f5;
+        }
+        @media (max-width: 600px) {
+            #container {
+                margin: 20px;
+                width: auto;
+            }
+            #chat-box {
+                height: 400px;
+            }
+            #send-btn, #reset-btn {
+                padding: 8px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <div id="chat-box">
+        <div class="bot">Hi! Welcome to TicketBot. What's your name?</div>
+    </div>
+
+    <div id="input-area">
+        <input type="text" id="user-input" placeholder="Type your response..." />
+        <button id="send-btn">Send</button>
+    </div>
+
+    <div id="button-area">
+        <button id="reset-btn">Restart Chat</button>
+    </div>
+    <div style="text-align: right; padding: 10px; max-width: 500px; margin: auto;">
+    <form action="logout.php" method="post">
+        <button type="submit" style="background-color: #dc3545; color: white; padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer;">Logout</button>
+    </form>
+</div>
+</div>
+
+<script>
+    let step = 0;
+    let bookingData = {};
+
+    document.getElementById("send-btn").addEventListener("click", handleInput);
+    document.getElementById("user-input").addEventListener("keypress", function(e) {
+        if (e.key === "Enter") handleInput();
+    });
+
+    document.getElementById("reset-btn").addEventListener("click", function() {
+        step = 0;
+        bookingData = {};
+        document.getElementById("chat-box").innerHTML = '<div class="bot">Hi! Welcome to TicketBot. What\'s your name?</div>';
+        document.getElementById("user-input").value = '';
+    });
+
+    function handleInput() {
+        let input = document.getElementById("user-input").value.trim();
+        if (input === "") return;
+        displayMessage(input, "user");
+        document.getElementById("user-input").value = "";
+
+        switch (step) {
+            case 0:
+                bookingData.name = input;
+                displayMessage("Thanks " + input + "! What's your email?", "bot");
+                step++;
+                break;
+            case 1:
+                if (!validateEmail(input)) {
+                    displayMessage("Invalid email format! Please enter a valid email address.", "bot");
+                    return;
+                }
+                bookingData.email = input;
+                displayMessage("Where do you want to travel?", "bot");
+                step++;
+                break;
+            case 2:
+                bookingData.destination = input;
+                displayMessage("On which date? (YYYY-MM-DD)", "bot");
+                step++;
+                break;
+            case 3:
+                bookingData.travel_date = input;
+                displayMessage("How many tickets do you need?", "bot");
+                step++;
+                break;
+            case 4:
+                bookingData.tickets = input;
+                fetch("save_booking.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(bookingData)
+                })
+                .then(res => res.text())
+                .then(data => displayMessage(data, "bot"))
+                .catch(err => displayMessage("Error processing your request.", "bot"));
+                step++;
+                break;
+            default:
+                displayMessage("Thanks! If you want to book another ticket, click 'Restart Chat'.", "bot");
+        }
+    }
+
+    function displayMessage(text, sender) {
+        let chatBox = document.getElementById("chat-box");
+        let msgDiv = document.createElement("div");
+        msgDiv.className = sender;
+        msgDiv.innerText = text;
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+</script>
+
+</body>
+</html>
